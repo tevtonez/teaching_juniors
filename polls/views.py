@@ -20,31 +20,26 @@ class SignUpView(CreateView):
     success_url = reverse_lazy('login')
     template_name = 'polls/signup.html'
 
+class MainIndexView(TemplateView):
+    template_name = "index.html"
 
-class IndexView(TemplateView):
-    template_name = 'index.html'
+class IndexView(ListView):
+    template_name = 'polls/index.html'
+    context_object_name = 'latest_question_list'
+
+    def get_queryset(self):
+        """Return the last five published questions."""
+        return models.Question.objects.order_by('-pub_date')[:5]
+
+class QuestionDetailView(DetailView):
+    model = models.Question
+    template_name = "polls/detail.html"
 
 
-class pollsIndexView(TemplateView):
-    template_name = 'polls/base.html'
+class QuestionResultsView(DetailView):
+    model = models.Question
+    template_name = "polls/results.html"
 
-
-def index(request):
-    latest_question_list = models.Question.objects.order_by('-pub_date')[:5]
-    #template = loader.get_template('polls/index.html')
-    context = {
-        'latest_question_list': latest_question_list,
-    }
-
-    return render(request,'polls/index.html', context)
-
-def detail(request, question_id):
-    question = get_object_or_404(models.Question,pk=question_id)
-    return render(request, 'polls/detail.html', {'question':question})
-
-def results(request, question_id):
-    question = get_object_or_404(models.Question, pk=question_id)
-    return render(request, 'polls/results.html', {'question': question})
 
 def vote(request, question_id):
     question = get_object_or_404(models.Question, pk=question_id)
@@ -61,3 +56,4 @@ def vote(request, question_id):
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
 
     return HttpResponse("This is view for voting for a question %s" % question_id)
+

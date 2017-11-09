@@ -13,8 +13,7 @@ urlpatterns = [
 
     url(r'^polls/', include('polls.urls')),
 
-    url(r'^$', polls_views.IndexView.as_view(), name='home'),
-    url(r'^polls_template/$', polls_views.pollsIndexView.as_view(), name='polls_template'),
+    url(r'^$', polls_views.MainIndexView.as_view(), name='home'),
 
     # logging users in/out
     url(r'^login/$', auth_views.login, {'template_name': 'polls/login.html'}, name='login'),
