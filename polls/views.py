@@ -12,8 +12,12 @@ from django.views.generic import View, TemplateView, ListView, DetailView, Creat
 
 from django.contrib.auth.decorators import login_required
 
+from django.utils import timezone
+
+
 from . import forms
 from . import models
+
 
 class SignUpView(CreateView):
     form_class = forms.UserCreateForm
@@ -23,13 +27,15 @@ class SignUpView(CreateView):
 class MainIndexView(TemplateView):
     template_name = "index.html"
 
-class IndexView(ListView):
+class PollsIndexView(ListView):
     template_name = 'polls/index.html'
     context_object_name = 'latest_question_list'
 
     def get_queryset(self):
         """Return the last five published questions."""
-        return models.Question.objects.order_by('-pub_date')[:5]
+        return models.Question.objects.filter(
+            pub_date__lte=timezone.now()
+        ).order_by('-pub_date')[:5]
 
 class QuestionDetailView(DetailView):
     model = models.Question
