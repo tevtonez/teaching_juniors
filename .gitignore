@@ -102,10 +102,11 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# Media files #
-###############
+# sqlite3
+*.sqlite3
+
+# Media files
 staticfiles/
 
-# Misc files and dirs #
-#######################
+# Misc files and dirs
 dev_temp/
